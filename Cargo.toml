@@ -7,3 +7,14 @@ edition = "2021"
 
 [dependencies]
 async-graphql = "4.0.16"
+sea-orm = { version = "0.10.2", features = [
+  "sqlx-postgres",
+  "runtime-tokio-native-tls",
+  "macros",
+  "debug-print",
+  "mock",
+] }
+futures = "0.3.25"
+config = "0.13.2"
+serde = { version = "1.0.147", features = ["derive"] }
+lazy_static = "1.4.0"
