@@ -18,3 +18,5 @@ futures = "0.3.25"
 config = "0.13.2"
 serde = { version = "1.0.147", features = ["derive"] }
 lazy_static = "1.4.0"
+axum = "0.5.17"
+tokio = { version = "1.22.0", features = ["full"] }
