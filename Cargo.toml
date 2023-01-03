@@ -5,8 +5,15 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+# path = "src/lib.rs"
+
+[[bin]]
+name = "data_seeker"
+# path = "src/main.rs"
+
 [dependencies]
-async-graphql = "4.0.16"
+async-graphql = "5.0.4"
 sea-orm = { version = "0.10.2", features = [
   "sqlx-postgres",
   "runtime-tokio-native-tls",
@@ -18,5 +25,8 @@ futures = "0.3.25"
 config = "0.13.2"
 serde = { version = "1.0.147", features = ["derive"] }
 lazy_static = "1.4.0"
-axum = "0.5.17"
-tokio = { version = "1.22.0", features = ["full"] }
+axum = "0.6.1"
+tokio = { version = "1", features = ["full"] }
+hyper = { version = "0.14", features = ["full"] }
+tower-http = { version = "0.3", features = ["full"] }
+tower = { version = "0.4.13", features = ["full"] }
