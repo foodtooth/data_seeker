@@ -34,17 +34,7 @@ async fn health_check_works() {
 
 #[tokio::test]
 async fn real_deal_health_check_works() {
-    let listener = TcpListener::bind("0.0.0.0:0".parse::<SocketAddr>().unwrap()).unwrap();
-    let addr = listener.local_addr().unwrap();
-
-    tokio::spawn(async move {
-        axum::Server::from_tcp(listener)
-            .unwrap()
-            .serve(data_seeker::app().into_make_service())
-            .await
-            .unwrap();
-    });
-
+    let addr = spawn_server();
     let client = hyper::Client::new();
     let response = client
         .request(
@@ -56,4 +46,19 @@ async fn real_deal_health_check_works() {
         .await
         .unwrap();
     assert!(response.status().is_success());
+}
+
+fn spawn_server() -> SocketAddr {
+    let listener = TcpListener::bind("0.0.0.0:0".parse::<SocketAddr>().unwrap()).unwrap();
+    let addr = listener.local_addr().unwrap();
+
+    tokio::spawn(async move {
+        axum::Server::from_tcp(listener)
+            .unwrap()
+            .serve(data_seeker::app().into_make_service())
+            .await
+            .unwrap();
+    });
+
+    addr
 }

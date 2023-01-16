@@ -1,11 +1,6 @@
 [server.data_seeker]
-port = "8080"
-host = "http://localhost"
-
-[server.postgres]
-port = "5432"
-host = "postgres://mike:mike@localhost"
-db_name = "mike"
+port = 3000
+host = "localhost"
 
 [log]
 level = "info"

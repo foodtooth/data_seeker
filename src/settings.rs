@@ -9,7 +9,7 @@ pub struct Server {
 
 #[derive(Deserialize, Debug)]
 pub struct DataSeeker {
-    pub port: String,
+    pub port: u16,
     pub host: String,
 }
 
