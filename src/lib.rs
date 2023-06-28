@@ -16,7 +16,11 @@ use tower_http::{
     trace::TraceLayer,
 };
 
+use dotenvy::dotenv;
 use lazy_static::lazy_static;
+use sea_orm::{
+    ConnectionTrait, Database, DatabaseBackend, DatabaseConnection, DbBackend, Statement,
+};
 use settings::Settings;
 use std::sync::RwLock;
 use validator::Validate;
@@ -26,7 +30,16 @@ lazy_static! {
         RwLock::new(Settings::new().expect("configs should be ready when starting app"));
 }
 
-pub fn app() -> Router {
+async fn db_init() -> DatabaseConnection {
+    dotenv().ok();
+    let database_url = dotenvy::var("DATABASE_URL").unwrap();
+    let db_name = dotenvy::var("DB_NAME").unwrap();
+    Database::connect(&database_url).await.unwrap()
+}
+
+pub async fn app() -> Router {
+    let db = db_init().await;
+
     let cors = CorsLayer::new()
         // allow `GET` and `POST` when accessing the resource
         .allow_methods([Method::GET, Method::POST])
@@ -140,7 +153,7 @@ impl IntoResponse for ServerError {
     fn into_response(self) -> Response {
         match self {
             ServerError::ValidationError(_) => {
-                let message = format!("Input validation error: [{}]", self).replace('\n', ", ");
+                let message = format!("Input validation error: [{self}]").replace('\n', ", ");
                 (StatusCode::BAD_REQUEST, message)
             }
             ServerError::AxumJsonRejection(_) => (StatusCode::BAD_REQUEST, self.to_string()),

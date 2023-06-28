@@ -16,7 +16,7 @@ use tower::ServiceExt; // for `oneshot` and `ready`
 
 #[tokio::test]
 async fn health_check_works() {
-    let app = data_seeker::app();
+    let app = data_seeker::app().await;
 
     let response = app
         .oneshot(
@@ -55,7 +55,7 @@ fn spawn_server() -> SocketAddr {
     tokio::spawn(async move {
         axum::Server::from_tcp(listener)
             .unwrap()
-            .serve(data_seeker::app().into_make_service())
+            .serve(data_seeker::app().await.into_make_service())
             .await
             .unwrap();
     });
